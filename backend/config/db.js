@@ -6,6 +6,12 @@ export const  connectDB = async () =>{
    
 }
 
+function getDB() {
+  if (!db) {
+    throw new Error('Database not connected. Call connectDB first.');
+  }
+  return db;
+}
 
 // add your mongoDB connection string above.
 // Do not use '@' symbol in your databse user's password else it will show an error.

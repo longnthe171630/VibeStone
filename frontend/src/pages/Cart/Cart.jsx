@@ -1,12 +1,111 @@
-import React, { useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Cart.css'
-import { StoreContext } from '../../Context/StoreContext'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 const Cart = () => {
+  const [cartItems, setCartItems] = useState({})
+  const [products, setProducts] = useState([])
+  const navigate = useNavigate()
+  const CURRENCY = ' VNĐ'
+  const DELIVERY_CHARGE = 10000
 
-  const {cartItems, food_list, removeFromCart,getTotalCartAmount,url,currency,deliveryCharge} = useContext(StoreContext);
-  const navigate = useNavigate();
+  useEffect(() => {
+    // Lấy dữ liệu giỏ hàng từ localStorage
+    const savedCart = localStorage.getItem('cart')
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart))
+    }
+
+    // Lấy danh sách sản phẩm từ localStorage
+    const savedProducts = localStorage.getItem('products')
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts))
+    }
+  }, [])
+
+  // Tăng số lượng sản phẩm
+  const increaseQuantity = (itemId) => {
+    setCartItems(prevCart => {
+      const newCart = { ...prevCart }
+      newCart[itemId] = (newCart[itemId] || 0) + 1
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      
+      // Kích hoạt sự kiện cập nhật giỏ hàng
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      // Tạo hiệu ứng nhảy cho cart icon
+      const cartCountElement = document.querySelector('.cart-count')
+      if (cartCountElement) {
+        cartCountElement.classList.remove('animate-bounce')
+        setTimeout(() => {
+          cartCountElement.classList.add('animate-bounce')
+        }, 10)
+      }
+      
+      return newCart
+    })
+  }
+
+  // Giảm số lượng sản phẩm
+  const decreaseQuantity = (itemId) => {
+    setCartItems(prevCart => {
+      const newCart = { ...prevCart }
+      if (newCart[itemId] > 1) {
+        newCart[itemId] -= 1
+      } else {
+        delete newCart[itemId]
+      }
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      
+      // Kích hoạt sự kiện cập nhật giỏ hàng
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      // Tạo hiệu ứng nhảy cho cart icon
+      const cartCountElement = document.querySelector('.cart-count')
+      if (cartCountElement) {
+        cartCountElement.classList.remove('animate-bounce')
+        setTimeout(() => {
+          cartCountElement.classList.add('animate-bounce')
+        }, 10)
+      }
+      
+      return newCart
+    })
+  }
+
+  // Xóa toàn bộ sản phẩm
+  const removeItem = (itemId) => {
+    setCartItems(prevCart => {
+      const newCart = { ...prevCart }
+      delete newCart[itemId]
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      
+      // Kích hoạt sự kiện cập nhật giỏ hàng
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      // Tạo hiệu ứng nhảy cho cart icon
+      const cartCountElement = document.querySelector('.cart-count')
+      if (cartCountElement) {
+        cartCountElement.classList.remove('animate-bounce')
+        setTimeout(() => {
+          cartCountElement.classList.add('animate-bounce')
+        }, 10)
+      }
+      
+      return newCart
+    })
+  }
+
+  const getTotalCartAmount = () => {
+    let totalAmount = 0
+    for (const itemId in cartItems) {
+      const product = products.find(p => p._id === parseInt(itemId))
+      if (product) {
+        totalAmount += product.price * cartItems[itemId]
+      }
+    }
+    return totalAmount
+  }
 
   return (
     <div className='cart'>
@@ -16,33 +115,49 @@ const Cart = () => {
         </div>
         <br />
         <hr />
-        {food_list.map((item, index) => {
-          if (cartItems[item._id]>0) {
-            return (<div key={index}>
+        {products.map((item) => {
+          if (cartItems[item._id] > 0) {
+            return (
+              <div key={item._id}>
               <div className="cart-items-title cart-items-item">
-                <img src={url+"/images/"+item.image} alt="" />
+                  <img src={item.image} alt="" />
                 <p>{item.name}</p>
-                <p>{currency}{item.price}</p>
-                <div>{cartItems[item._id]}</div>
-                <p>{currency}{item.price*cartItems[item._id]}</p>
-                <p className='cart-items-remove-icon' onClick={()=>removeFromCart(item._id)}>x</p>
+                  <p>{item.price}{CURRENCY}</p>
+                  <div className="quantity-controls">
+                    <button onClick={() => decreaseQuantity(item._id)}>-</button>
+                    <span>{cartItems[item._id]}</span>
+                    <button onClick={() => increaseQuantity(item._id)}>+</button>
+                  </div>
+                  <p>{item.price * cartItems[item._id]}{CURRENCY}</p>
+                  <p className='cart-items-remove-icon' onClick={() => removeItem(item._id)}>x</p>
+                </div>
+                <hr />
               </div>
-              <hr />
-            </div>)
+            )
           }
+          return null
         })}
       </div>
       <div className="cart-bottom">
         <div className="cart-total">
           <h2>Tổng kết giỏ hàng</h2>
           <div>
-            <div className="cart-total-details"><p>Chi phí sản phẩm</p><p>{currency}{getTotalCartAmount()}</p></div>
+            <div className="cart-total-details">
+              <p>Chi phí sản phẩm</p>
+              <p>{getTotalCartAmount()}{CURRENCY}</p>
+            </div>
             <hr />
-            <div className="cart-total-details"><p>Phí vận chuyển</p><p>{currency}{getTotalCartAmount()===0?0:deliveryCharge}</p></div>
+            <div className="cart-total-details">
+              <p>Phí vận chuyển</p>
+              <p>{getTotalCartAmount() === 0 ? 0 : DELIVERY_CHARGE}{CURRENCY}</p>
+            </div>
             <hr />
-            <div className="cart-total-details"><b>Tổng</b><b>{currency}{getTotalCartAmount()===0?0:getTotalCartAmount()+deliveryCharge}</b></div>
+            <div className="cart-total-details">
+              <b>Tổng</b>
+              <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + DELIVERY_CHARGE}{CURRENCY}</b>
+            </div>
           </div>
-          <button onClick={()=>navigate('/order')}>THANH TOÁN</button>
+          <button onClick={() => navigate('/order')}>THANH TOÁN</button>
         </div>
         <div className="cart-promocode">
           <div>

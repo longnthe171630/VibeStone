@@ -1,7 +1,7 @@
 .header{
     height: 34vw;
     margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
+    background: url('/src/assets/header_img.png') no-repeat;
     background-size:contain;
     position: relative;
 }
@@ -20,6 +20,23 @@
     font-weight:500;
     color: white;
     font-size: max(4.5vw,22px);
+}
+
+.header-contents h2 i {
+    font-size: 0.8em;
+    margin-right: 8px;
+}
+
+.header-contents h2 span:nth-child(1) i {
+    color: #FFD700; /* Màu vàng cho icon đồng tiền */
+}
+
+.header-contents h2 span:nth-child(3) i {
+    color: #9370DB; /* Màu tím nhạt cho icon ngọc */
+}
+
+.header-contents h2 span:nth-child(5) i {
+    color: #00BFFF; /* Màu xanh dương cho icon âm dương */
 }
 .header-contents p{
     color: white;

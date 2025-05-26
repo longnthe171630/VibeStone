@@ -32,14 +32,21 @@
 position: relative;
 }
 
-.navbar-search-icon .dot{
+.cart-count {
     position: absolute;
-    min-width: 10px;
-    min-height: 10px;
-    background-color: #FF4C24;
-    border-radius: 5px;
     top: -8px;
     right: -8px;
+    background-color: #FF4C24;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .navbar-right button {

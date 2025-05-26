@@ -5,10 +5,33 @@ import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../Context/StoreContext'
 
 const Navbar = ({ setShowLogin }) => {
-
   const [menu, setMenu] = useState("home");
-  const { getTotalCartAmount, token ,setToken } = useContext(StoreContext);
+  const [cartCount, setCartCount] = useState(0);
+  const { token, setToken } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+      // Tính tổng số lượng sản phẩm thay vì số lượng loại sản phẩm
+      const totalItems = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0);
+      setCartCount(totalItems);
+    };
+
+    // Cập nhật số lượng ban đầu
+    updateCartCount();
+
+    // Lắng nghe sự kiện thay đổi trong localStorage
+    window.addEventListener('storage', updateCartCount);
+    
+    // Lắng nghe custom event để cập nhật khi thêm sản phẩm
+    window.addEventListener('cartUpdated', updateCartCount);
+
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cartUpdated', updateCartCount);
+    };
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -21,15 +44,17 @@ const Navbar = ({ setShowLogin }) => {
       <Link to='/'><img className='logo' src={assets.logo} alt="" /></Link>
       <ul className="navbar-menu">
         <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Trang chủ</Link>
-        <a href='#explore-menu' onClick={() => setMenu("menu")} className={`${menu === "menu" ? "active" : ""}`}>Cửa hàng</a>
-        <a href='#app-download' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>Ứng dụng</a>
+        <a onClick={() => navigate('/store')} className={`${menu === "menu" ? "active" : ""}`}>Cửa hàng</a>        
         <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Liên hệ</a>
+        <Link to="/tuvi" onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>Tử Vi</Link>
       </ul>
       <div className="navbar-right">
         <img src={assets.search_icon} alt="" />
         <Link to='/cart' className='navbar-search-icon'>
           <img src={assets.basket_icon} alt="" />
-          <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
+          {cartCount > 0 && (
+            <div className="cart-count animate-bounce">{cartCount}</div>
+          )}
         </Link>
         {!token ? <button onClick={() => setShowLogin(true)}>Đăng kí</button>
           : <div className='navbar-profile'>
@@ -41,7 +66,6 @@ const Navbar = ({ setShowLogin }) => {
             </ul>
           </div>
         }
-
       </div>
     </div>
   )

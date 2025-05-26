@@ -20,6 +20,12 @@
     align-items: start;
     gap: 20px;
 }
+
+.footer-content-left img {
+    max-width: 150px;
+    height: auto;
+    margin-top: -8px;
+}
 .footer-content-left ul li, .footer-content-center ul li, .footer-content-right ul li{
     margin-bottom: 10px;
     list-style: none;

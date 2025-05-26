@@ -10,6 +10,8 @@ import MyOrders from './pages/MyOrders/MyOrders'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
+import TuViPage from './pages/TuViPage/TuViPage'
+import Store from './pages/Store/Store'
 
 const App = () => {
 
@@ -23,10 +25,12 @@ const App = () => {
         <Navbar setShowLogin={setShowLogin}/>
         <Routes>
           <Route path='/' element={<Home />}/>
+          <Route path="/tuvi" element={<TuViPage />} />
           <Route path='/cart' element={<Cart />}/>
           <Route path='/order' element={<PlaceOrder />}/>
           <Route path='/myorders' element={<MyOrders />}/>
           <Route path='/verify' element={<Verify />}/>
+          <Route path="/store" element={<Store />} />
         </Routes>
       </div>
       <Footer />
