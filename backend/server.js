@@ -6,8 +6,7 @@ import foodRouter from "./routes/foodRoute.js";
 import "dotenv/config";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
-import analyzeRouter from "./routes/analyze.js";
-import productsRouter from "./routes/products.js"; // Thêm route cho products
+import analyzeRouter from "./routes/analyze.js"; // Add this line
 
 // app config
 const app = express();
@@ -26,8 +25,7 @@ app.use("/api/food", foodRouter);
 app.use("/images", express.static("uploads"));
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
-app.use("/api", analyzeRouter);
-app.use("/api/products", productsRouter); // Đăng ký route cho products API
+app.use("/api", analyzeRouter); // Add this line
 
 app.get("/", (req, res) => {
   res.send("API Working");

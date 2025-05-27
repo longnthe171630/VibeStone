@@ -88,35 +88,35 @@ export const assets = {
 
 export const menu_list = [
     {
-        menu_name: "Salad",
+        menu_name: "Hũ Đá",
         menu_image: menu_1
     },
     {
-        menu_name: "Rolls",
+        menu_name: "Vòng Tay",
         menu_image: menu_2
     },
     {
-        menu_name: "Deserts",
+        menu_name: "Móc Khóa",
         menu_image: menu_3
     },
     {
-        menu_name: "Sandwich",
+        menu_name: "Cây Đá",
         menu_image: menu_4
     },
     {
-        menu_name: "Cake",
+        menu_name: "Cầu Thủy Tinh",
         menu_image: menu_5
     },
     {
-        menu_name: "Pure Veg",
+        menu_name: "Nhẫn",
         menu_image: menu_6
     },
     {
-        menu_name: "Pasta",
+        menu_name: "Vòng Cổ",
         menu_image: menu_7
     },
     {
-        menu_name: "Noodles",
+        menu_name: "Tượng",
         menu_image: menu_8
     }]
 

@@ -6,11 +6,11 @@ export const  connectDB = async () =>{
    
 }
 
-function getDB() {
-  if (!db) {
+export function getDB() {
+  if (!mongoose.connection) {
     throw new Error('Database not connected. Call connectDB first.');
   }
-  return db;
+  return mongoose.connection;
 }
 
 // add your mongoDB connection string above.

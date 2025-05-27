@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Inter', sans-serif;
   scroll-behavior: smooth;
 }
 
@@ -21,8 +21,8 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cinzel', serif;
-  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
 }
 
 p {
@@ -31,7 +31,7 @@ p {
 }
 
 button, .btn {
-  font-family: 'Philosopher', sans-serif;
+  font-family: 'Inter', sans-serif;
   letter-spacing: 0.5px;
 }
 

@@ -1,7 +1,7 @@
-const express = require('express');
-const Joi = require('joi');
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
+import express from 'express';
+import Joi from 'joi';
+import { getDB } from '../config/db.js';
+import { ObjectId } from 'mongodb';
 
 const router = express.Router();
 

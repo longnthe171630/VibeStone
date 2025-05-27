@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './Cart.css'
 import { useNavigate } from 'react-router-dom'
+import { StoreContext } from '../../Context/StoreContext'
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState({})
@@ -8,6 +9,12 @@ const Cart = () => {
   const navigate = useNavigate()
   const CURRENCY = ' VNĐ'
   const DELIVERY_CHARGE = 10000
+  const { url } = useContext(StoreContext)
+  
+  // Hàm định dạng tiền tệ với dấu phân cách hàng nghìn
+  const formatCurrency = (amount) => {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
 
   useEffect(() => {
     // Lấy dữ liệu giỏ hàng từ localStorage
@@ -99,9 +106,12 @@ const Cart = () => {
   const getTotalCartAmount = () => {
     let totalAmount = 0
     for (const itemId in cartItems) {
-      const product = products.find(p => p._id === parseInt(itemId))
+      // Tìm sản phẩm bằng ID dưới dạng chuỗi, không chuyển đổi thành số nguyên
+      const product = products.find(p => p._id === itemId)
       if (product) {
         totalAmount += product.price * cartItems[itemId]
+      } else {
+        console.log(`Không tìm thấy sản phẩm với ID: ${itemId}`, 'Danh sách sản phẩm:', products)
       }
     }
     return totalAmount
@@ -115,21 +125,22 @@ const Cart = () => {
         </div>
         <br />
         <hr />
-        {products.map((item) => {
-          if (cartItems[item._id] > 0) {
+        {Object.keys(cartItems).map((itemId) => {
+          const item = products.find(p => p._id === itemId);
+          if (item && cartItems[itemId] > 0) {
             return (
-              <div key={item._id}>
+              <div key={itemId}>
               <div className="cart-items-title cart-items-item">
-                  <img src={item.image} alt="" />
+                  <img src={item.image ? `${url}/images/${item.image}` : ''} alt={item.name} />
                 <p>{item.name}</p>
-                  <p>{item.price}{CURRENCY}</p>
+                  <p>{formatCurrency(item.price)}{CURRENCY}</p>
                   <div className="quantity-controls">
-                    <button onClick={() => decreaseQuantity(item._id)}>-</button>
-                    <span>{cartItems[item._id]}</span>
-                    <button onClick={() => increaseQuantity(item._id)}>+</button>
+                    <button onClick={() => decreaseQuantity(itemId)}>-</button>
+                    <span>{cartItems[itemId]}</span>
+                    <button onClick={() => increaseQuantity(itemId)}>+</button>
                   </div>
-                  <p>{item.price * cartItems[item._id]}{CURRENCY}</p>
-                  <p className='cart-items-remove-icon' onClick={() => removeItem(item._id)}>x</p>
+                  <p>{formatCurrency(item.price * cartItems[itemId])}{CURRENCY}</p>
+                  <p className='cart-items-remove-icon' onClick={() => removeItem(itemId)}>x</p>
                 </div>
                 <hr />
               </div>
@@ -144,17 +155,17 @@ const Cart = () => {
           <div>
             <div className="cart-total-details">
               <p>Chi phí sản phẩm</p>
-              <p>{getTotalCartAmount()}{CURRENCY}</p>
+              <p>{formatCurrency(getTotalCartAmount())}{CURRENCY}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Phí vận chuyển</p>
-              <p>{getTotalCartAmount() === 0 ? 0 : DELIVERY_CHARGE}{CURRENCY}</p>
+              <p>{formatCurrency(getTotalCartAmount() === 0 ? 0 : DELIVERY_CHARGE)}{CURRENCY}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Tổng</b>
-              <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + DELIVERY_CHARGE}{CURRENCY}</b>
+              <b>{formatCurrency(getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + DELIVERY_CHARGE)}{CURRENCY}</b>
             </div>
           </div>
           <button onClick={() => navigate('/order')}>THANH TOÁN</button>

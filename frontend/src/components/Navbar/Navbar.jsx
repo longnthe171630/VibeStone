@@ -1,14 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './Navbar.css'
 import { assets } from '../../assets/assets'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { StoreContext } from '../../Context/StoreContext'
 
 const Navbar = ({ setShowLogin }) => {
-  const [menu, setMenu] = useState("home");
+  const [menu, setMenu] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const { token, setToken } = useContext(StoreContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Cập nhật menu dựa trên URL hiện tại
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/') {
+      setMenu('home');
+    } else if (path === '/store') {
+      setMenu('store');
+    } else if (path === '/tuvi') {
+      setMenu('mob-app');
+    } else if (path.includes('/cart')) {
+      setMenu('cart');
+    } else {
+      // Mặc định không có menu nào được chọn
+      setMenu('');
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -44,9 +62,9 @@ const Navbar = ({ setShowLogin }) => {
       <Link to='/'><img className='logo' src={assets.logo} alt="" /></Link>
       <ul className="navbar-menu">
         <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Trang chủ</Link>
-        <a onClick={() => navigate('/store')} className={`${menu === "menu" ? "active" : ""}`}>Cửa hàng</a>        
-        <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Liên hệ</a>
+        <Link to="/store" onClick={() => setMenu("store")} className={`${menu === "store" ? "active" : ""}`}>Cửa hàng</Link>        
         <Link to="/tuvi" onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>Tử Vi</Link>
+        <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Liên hệ</a>
       </ul>
       <div className="navbar-right">
         <img src={assets.search_icon} alt="" />
