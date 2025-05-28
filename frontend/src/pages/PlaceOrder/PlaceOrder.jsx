@@ -72,7 +72,7 @@ const PlaceOrder = () => {
 
     useEffect(() => {
         if (!token) {
-            toast.error("to place an order sign in first")
+            toast.error("Để đặt hàng, vui lòng đăng nhập")
             navigate('/cart')
         }
         else if (getTotalCartAmount() === 0) {
@@ -83,12 +83,12 @@ const PlaceOrder = () => {
     return (
         <form onSubmit={placeOrder} className='place-order'>
             <div className="place-order-left">
-                <p className='title'>Delivery Information</p>
+                <p className='title'>Thông tin giao hàng</p>
                 <div className="multi-field">
-                    <input type="text" name='firstName' onChange={onChangeHandler} value={data.firstName} placeholder='First name' required />
-                    <input type="text" name='lastName' onChange={onChangeHandler} value={data.lastName} placeholder='Last name' required />
+                    <input type="text" name='firstName' onChange={onChangeHandler} value={data.firstName} placeholder='Họ' required />
+                    <input type="text" name='lastName' onChange={onChangeHandler} value={data.lastName} placeholder='Tên' required />
                 </div>
-                <input type="email" name='email' onChange={onChangeHandler} value={data.email} placeholder='Email address' required />
+                <input type="email" name='email' onChange={onChangeHandler} value={data.email} placeholder='Email' required />
                 <input type="text" name='street' onChange={onChangeHandler} value={data.street} placeholder='Street' required />
                 <div className="multi-field">
                     <input type="text" name='city' onChange={onChangeHandler} value={data.city} placeholder='City' required />
@@ -98,31 +98,31 @@ const PlaceOrder = () => {
                     <input type="text" name='zipcode' onChange={onChangeHandler} value={data.zipcode} placeholder='Zip code' required />
                     <input type="text" name='country' onChange={onChangeHandler} value={data.country} placeholder='Country' required />
                 </div>
-                <input type="text" name='phone' onChange={onChangeHandler} value={data.phone} placeholder='Phone' required />
+                <input type="text" name='phone' onChange={onChangeHandler} value={data.phone} placeholder='Số điện thoại' required />
             </div>
             <div className="place-order-right">
                 <div className="cart-total">
-                    <h2>Cart Totals</h2>
+                    <h2>Quản lý đơn hàng</h2>
                     <div>
-                        <div className="cart-total-details"><p>Subtotal</p><p>{currency}{getTotalCartAmount()}</p></div>
+                        <div className="cart-total-details"><p>Thành tiền</p><p>{getTotalCartAmount()}{currency}</p></div>
                         <hr />
-                        <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{getTotalCartAmount() === 0 ? 0 : deliveryCharge}</p></div>
+                        <div className="cart-total-details"><p>Phí giao hàng</p><p>{getTotalCartAmount() === 0 ? 0 : deliveryCharge}{currency}</p></div>
                         <hr />
-                        <div className="cart-total-details"><b>Total</b><b>{currency}{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + deliveryCharge}</b></div>
+                        <div className="cart-total-details"><b>Tổng</b><b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + deliveryCharge}{currency}</b></div>
                     </div>
                 </div>
                 <div className="payment">
-                    <h2>Payment Method</h2>
+                    <h2>Phương thức thanh toán</h2>
                     <div onClick={() => setPayment("cod")} className="payment-option">
                         <img src={payment === "cod" ? assets.checked : assets.un_checked} alt="" />
-                        <p>COD ( Cash on delivery )</p>
+                        <p>COD ( Thanh toán khi nhận hàng )</p>
                     </div>
                     <div onClick={() => setPayment("stripe")} className="payment-option">
                         <img src={payment === "stripe" ? assets.checked : assets.un_checked} alt="" />
-                        <p>Stripe ( Credit / Debit )</p>
+                        <p>Stripe ( Thanh toán qua thẻ tín dụng )</p>
                     </div>
                 </div>
-                <button className='place-order-submit' type='submit'>{payment==="cod"?"Place Order":"Proceed To Payment"}</button>
+                <button className='place-order-submit' type='submit'>{payment==="cod"?"Đặt hàng":"Thanh toán"}</button>
             </div>
         </form>
     )

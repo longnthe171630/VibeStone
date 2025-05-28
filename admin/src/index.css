@@ -1,18 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+/* Đã import các phông chữ trong index.html */
 *{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: Outfit;
+  font-family: 'Cormorant Garamond', serif;
 }
 body{
   min-height: 100vh;
-  background-color: #FCFCFC;
+  background-color: #f9f7f2;
+  color: #333;
 }
 a{
   text-decoration: none;
   color: inherit;
+  transition: all 0.3s ease;
 }
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+button, .btn, input[type="submit"] {
+  font-family: 'Philosopher', sans-serif;
+  letter-spacing: 0.5px;
+}
+
 hr{
   border: none;
   height: 1px;
